@@ -24,11 +24,14 @@ class Recipe
         end
     end
 
-    # def my_allergies
-    #     Allergy.all.select do |allergy|
-    #         allergy.recipe == self
-    #     end
-    # end
+    def my_allergens
+        my_arr = []
+        ingredients.each do |ingredient|
+            my_arr << Allergy.all.select do |allergy|
+                allergy.ingredient == ingredient
+            end.flatten
+        end
+    end
 
     def users
         my_recipe_cards.map do |recipeCard|
@@ -41,12 +44,6 @@ class Recipe
             recipeIngredient.ingredient
         end
     end
-
-    # def allergens
-    #     ingredients.select do |ingredient|
-    #         Allergy.all.
-    #     end
-    # end
 
     def add_ingredients(ingredients_arr)
         ingredients_arr.each do |ingredient|
