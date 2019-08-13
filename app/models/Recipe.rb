@@ -16,17 +16,15 @@ class Recipe
   end  # ends self.all method
 
   def self.most_popular
-    recipe_hash = Hash.new(0)
-    # recipes = RecipeCard.all.collect do |recipe|
-    #   recipe.recipe
-    # end
-    # r_hash = recipes.each do |recipe|
-    #   recipe_hash[recipe] += 1 
-    # end
-    # output = r_hash.sort_by {|recipe, count| count}
-    # output.last
-    # #recipe_hash = Hash.new(0)
-    RecipeCard.all.collect { |recipe| recipe.recipe}.each { |recipe| recipe_hash[recipe] += 1 }.sort_by {|recipe, count| count}.last
+    #grab all the recipes
+    #go through and compare recipes with the recipe cards 
+    #count the number 
+    self.all.max_by |recipe| 
+      #this bottom loop returns an array to run max_by through
+      RecipeCard.all.select do |card|
+        card.recipe == recipe
+      end.count #count the results and max_by will spit out the max 
+    end
   end  # ends self.most_popular
 
   def my_recipes
