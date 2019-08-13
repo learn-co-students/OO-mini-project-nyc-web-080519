@@ -38,14 +38,13 @@ rc15 = RecipeCard.new(u1, r5, "1999", "5")
 
 ri1 = RecipeIngredient.new(r1, i3)
 ri2 = RecipeIngredient.new(r2, i2)
-ri3 = RecipeIngredient.new(r1, i1)
+ri3 = RecipeIngredient.new(r3, i4)
+ri4 = RecipeIngredient.new(r4, i5)
 
 a1 = Allergy.new(u1, i1)
 a2 = Allergy.new(u2, i1)
-a3 = Allergy.new(u1, i2)
-a3 = Allergy.new(u1, i2)
-a3 = Allergy.new(u1, i2)
-a3 = Allergy.new(u1, i2)
+a3 = Allergy.new(u1, i5)
+
 
 
 

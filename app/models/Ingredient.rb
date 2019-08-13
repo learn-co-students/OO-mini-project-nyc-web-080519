@@ -18,6 +18,18 @@ class Ingredient
         @@all
     end
 
+    def recipeIngredients
+        RecipeIngredient.all.select do |recipeIngredient|
+            recipeIngredient.ingredient == self
+        end
+    end
+
+    def recipes
+        recipeIngredients.map do |recipeIngredient|
+            recipeIngredient.recipe
+        end
+    end
+
     def self.most_common_allergen
         counter = 0
         most_common_ingredient = nil

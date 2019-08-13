@@ -53,9 +53,18 @@ class User
         recipes.last
     end
 
-    def safe_recipes
-
+    def safe_ingredients
+        Ingredient.all.select do |ingredient|
+            allergens.include?(ingredient) == false
+        end
     end
+
+    def safe_recipes
+        return safe_ingredients.map do |ingredient|
+            ingredient.recipes
+        end.flatten
+    end
+
 
     def self.all
         @@all
