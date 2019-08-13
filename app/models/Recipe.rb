@@ -11,42 +11,39 @@ class Recipe
         @@all
     end
 
-    def recipes
-        RecipeCard.all.select { |recipe_card| recipe_card.recipe == self }
+    #Return RecipeCards that use this recipe
+    def recipe_cards
+        RecipeCard.all.select {|recipe_card| recipe_card.recipe == self}
     end
 
+    #Return the recipe instance with the highest number of users
     def self.most_popular
-        self.all.max_by {|recipe| recipe.recipes.count} 
+        Recipe.all.max_by {|recipe| recipe.recipe_cards.count}
     end
 
-    #should return the user instances who have recipe cards with this recipe
+    #Return the user instances who have recipe cards with this recipe
     def users
-        recipes.map do |recipe|
-            recipe.user
-        end
+        self.recipe_cards.map {|recipe_card| recipe_card.user}
     end
 
-    # should return all of the ingredients in this recipe
+    #Return all of the ingredients in this recipe
     def ingredients
-        ingre_list = RecipeIngredient.all.select do |recipe_ingr|
-            recipe_ingr.recipe.recipe == self
-        end
-        ingre_list.map {|recipe| recipe.ingredient}
-
-        # RecipeIngredient.all.select { |rec_ing| rec_ing.recipe == self }.map { |recipe| recipe.ingredient }
+        RecipeIngredient.all.select do |recipe_ingre|
+            recipe_ingre.recipe == self
+        end.map {|recipe_ingre| recipe_ingre.ingredient}
     end
 
+    #Return all of the Ingredients in this recipe 
+    #that are allergens for Users in our system
     def allergens
-        ingredients.select do |ingredient|
-            Allergy.all.map do |allergy|
-                allergy.ingredient
-            end.uniq.include?(ingredient)
+        self.ingredients.select do |ingre|
+            Allergy.all.map {|allergy| allergy.ingredient}.uniq.include?(ingre)
         end
     end
 
+    #Take an array of ingredient instances as an argument
+    #associate each of those ingredients with this recipe
     def add_ingredients(ingre)
-        ingre.each do |ingre|
-            RecipeIngredient.new(self, ingre)
-        end
+        ingre.each {|ingre| RecipeIngredient.new(self, ingre)}
     end
 end

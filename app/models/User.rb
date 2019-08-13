@@ -11,38 +11,50 @@ class User
         @@all
     end
 
-    def recipes
+    #returns all recipe cards for this user
+    def recipe_cards
         RecipeCard.all.select {|recipe_card| recipe_card.user == self}
+    end    
+
+    #return all of the recipes this user has recipe cards for
+    def recipes
+        self.recipe_cards.map {|recipe_card| recipe_card.recipe}
     end
 
-    def add_recipe_card(given_recipe, given_date, given_rating)
-        RecipeCard.new(self, given_recipe, given_date, given_rating)
+    #accept a recipe instance, a date and rating, as arguments 
+    #and create a new recipe card for this user and the given recipe
+    def add_recipe_card(recipe, date, rating)
+        RecipeCard.new(self, recipe, date, rating)
     end
 
-    def declare_allergy(given_ingredient)
-        Allergy.new(self, given_ingredient)
+    #accept an Ingredient instance as an argument
+    #create a new Allergy instance for this User and the given Ingredient
+    def declare_allergy(ingredient)
+        Allergy.new(self, ingredient)
     end
 
+    #return all of the ingredients this user is allergic to
     def allergens
-        Allergy.all.select {|allergy| allergy.user == self}
+        Allergy.all.select {|allergy| allergy.user == self}.map {|allergy| allergy.ingredient}
     end
 
-    #top 3 ratings for this user from the recipe card
+    #top 3 rated recipes for this user from the recipe card
     def top_three_recipes
-        ratings = Hash.new(0)
-        recipes.each { |recipe| ratings[recipe.recipe.name] = recipe.rating }
-        sorted_ratings = ratings.sort_by { |k, v| v }
-        [sorted_ratings[-1][0], sorted_ratings[-2][0], sorted_ratings[-3][0]]
+        recipe_cards.sort_by do |recipe_card| 
+            recipe_card.rating
+        end.reverse.first(3).map {|recipe_card| recipe_card.recipe}
     end
 
+    #return the recipe most recently added to the user's cookbook.
     def most_recent_recipe
-        recipes.last.recipe
+        recipe_cards.last.recipe
     end
 
     #should return all recipes that do not contain ingredients the user is allergic to
+    #reject recipes that contain ingredients this user is allergic too
     def safe_recipes
-        recipes.reject do |recipe|
-            recipe.ingredients.any? {|ingredient| allergens.include?(ingredient)}
+        self.recipes.reject do |recipe|
+            recipe.ingredients.any? {|ingre| self.allergens.include?(ingre)}
         end
     end
 end

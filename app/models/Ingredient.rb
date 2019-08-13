@@ -11,13 +11,11 @@ class Ingredient
         @@all
     end
 
+    #Return the ingredient instance 
+    #that the highest number of users are allergic to
     def self.most_common_allergy
-        allergy_hash = Hash.new(0)
-        Allergy.all.each { |allergy| allergy_hash[allergy.ingredient.name] += 1 }
-        allergy_hash.max_by { |k, v| v }[0]
-    end
-
-    def allergies
-        Allergy.all.select {|allergy| allergy.ingredient == self}
+        self.all.max_by do |ingre|
+            Allergy.all.select {|allergy| allergy.ingredient == ingre}.count
+        end
     end
 end
